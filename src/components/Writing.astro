@@ -1,0 +1,128 @@
+---
+interface Article {
+  title: string;
+  description: string;
+  source?: string;
+  date?: string;
+  url?: string;
+  image?: string;
+}
+
+interface Props {
+  articles: Article[];
+}
+
+const { articles } = Astro.props;
+
+const formatDate = (value?: string) => {
+  if (!value) return undefined;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+---
+
+<section class="writing">
+  <ul class="writing-list">
+    {
+      articles.map((article) => {
+        const meta = [article.source, formatDate(article.date)]
+          .filter(Boolean)
+          .join(" · ");
+        return (
+          <li class="writing-item">
+            <div class="writing-thumb">
+              {article.image && (
+                <img src={article.image} alt={article.title} loading="lazy" />
+              )}
+            </div>
+            <div class="writing-body">
+              {meta && <div class="writing-meta">{meta}</div>}
+              <h2 class="writing-title">
+                {article.url ? (
+                  <a href={article.url}>{article.title}</a>
+                ) : (
+                  article.title
+                )}
+              </h2>
+              <p class="writing-desc">{article.description}</p>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>
+
+<style>
+  .writing-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .writing-item {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1.5rem;
+    padding: 1.75rem 0;
+    border-top: 1px solid rgba(var(--ink), 0.1);
+  }
+
+  .writing-thumb {
+    aspect-ratio: 4 / 3;
+    background: var(--thumb);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .writing-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .writing-body {
+    max-width: 40rem;
+  }
+
+  .writing-meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(var(--ink), 0.5);
+    margin-bottom: 0.5rem;
+  }
+
+  .writing-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+
+  .writing-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .writing-title a:hover,
+  .writing-title a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .writing-desc {
+    margin: 0;
+    color: rgba(var(--ink), 0.72);
+  }
+
+  @media (max-width: 520px) {
+    .writing-item {
+      grid-template-columns: 6rem 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

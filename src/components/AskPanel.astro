@@ -1,0 +1,274 @@
+---
+interface QA {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: QA[];
+}
+
+const { items } = Astro.props;
+
+const fallback =
+  "The assistant isn't live yet — the chat backend is still being built. For now, pick one of the suggested questions above.";
+---
+
+<section class="ask" aria-label="Ask about me">
+  <div class="ask-card" data-ask>
+    <div class="ask-chips">
+      {
+        items.map((item, i) => (
+          <button class="ask-chip" type="button" data-index={i}>
+            {item.question}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="ask-answer" data-answer aria-live="polite">
+      <span class="ask-hint">Pick a question above, or ask your own.</span>
+    </div>
+
+    <form class="ask-form" data-ask-form>
+      <input
+        class="ask-input"
+        type="text"
+        name="q"
+        autocomplete="off"
+        placeholder="Ask your own question…"
+        aria-label="Ask your own question"
+      />
+      <button class="ask-send" type="submit" aria-label="Send question">
+        Ask
+      </button>
+    </form>
+  </div>
+
+  <script
+    type="application/json"
+    data-ask-data
+    set:html={JSON.stringify({
+      answers: items.map((i) => i.answer),
+      questions: items.map((i) => i.question),
+      fallback,
+    })}
+  />
+</section>
+
+<style>
+  .ask {
+    padding: 1rem 0 2rem;
+  }
+
+  .ask-card {
+    border: 1px solid rgba(var(--ink), 0.12);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .ask-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ask-chip {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: rgba(var(--ink), 0.8);
+    background: transparent;
+    border: 1px solid rgba(var(--ink), 0.18);
+    border-radius: 999px;
+    padding: 0.4rem 0.85rem;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .ask-chip:hover,
+  .ask-chip:focus-visible {
+    color: var(--fg);
+    border-color: rgba(var(--ink), 0.4);
+  }
+
+  .ask-chip[aria-pressed="true"] {
+    color: var(--fg);
+    border-color: rgba(var(--ink), 0.55);
+  }
+
+  .ask-answer {
+    margin-top: 1.1rem;
+    min-height: 3.5rem;
+    font-size: 1rem;
+    color: rgba(var(--ink), 0.82);
+    line-height: 1.65;
+  }
+
+  .ask-hint {
+    color: rgba(var(--ink), 0.4);
+  }
+
+  .ask-caret {
+    display: inline-block;
+    width: 0.5ch;
+    margin-left: 1px;
+    background: var(--fg);
+    color: transparent;
+    animation: ask-blink 1s steps(1) infinite;
+  }
+
+  .ask-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(var(--ink), 0.1);
+  }
+
+  .ask-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    color: var(--fg);
+    font-family: inherit;
+    font-size: 0.9375rem;
+    padding: 0.35rem 0;
+  }
+
+  .ask-input::placeholder {
+    color: rgba(var(--ink), 0.35);
+  }
+
+  .ask-input:focus {
+    outline: none;
+  }
+
+  .ask-send {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: rgba(var(--ink), 0.8);
+    background: transparent;
+    border: 1px solid rgba(var(--ink), 0.18);
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .ask-send:hover,
+  .ask-send:focus-visible {
+    color: var(--fg);
+    border-color: rgba(var(--ink), 0.4);
+  }
+
+  @keyframes ask-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ask-caret {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  interface AskData {
+    answers: string[];
+    questions: string[];
+    fallback: string;
+  }
+
+  function initAskPanel() {
+    const card = document.querySelector<HTMLElement>("[data-ask]");
+    if (!card || card.dataset.ready === "true") return;
+    card.dataset.ready = "true";
+
+    const dataEl = card
+      .closest(".ask")
+      ?.querySelector<HTMLElement>("[data-ask-data]");
+    const data: AskData = dataEl
+      ? JSON.parse(dataEl.textContent || "{}")
+      : { answers: [], questions: [], fallback: "" };
+
+    const answerEl = card.querySelector<HTMLElement>("[data-answer]");
+    const form = card.querySelector<HTMLFormElement>("[data-ask-form]");
+    const input = form?.querySelector<HTMLInputElement>(".ask-input");
+    const chips = Array.from(
+      card.querySelectorAll<HTMLButtonElement>(".ask-chip"),
+    );
+    if (!answerEl) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    let timer: number | undefined;
+
+    function stream(text: string) {
+      if (timer) window.clearInterval(timer);
+      answerEl!.textContent = "";
+
+      if (reduceMotion) {
+        answerEl!.textContent = text;
+        return;
+      }
+
+      const caret = document.createElement("span");
+      caret.className = "ask-caret";
+      caret.textContent = " ";
+      const textNode = document.createTextNode("");
+      answerEl!.append(textNode, caret);
+
+      let i = 0;
+      timer = window.setInterval(() => {
+        textNode.textContent = text.slice(0, ++i);
+        if (i >= text.length) {
+          window.clearInterval(timer);
+          caret.remove();
+        }
+      }, 18);
+    }
+
+    const normalize = (s: string) =>
+      s.toLowerCase().replace(/[?.!,]/g, "").trim();
+
+    // Placeholder for the future backend: match a preset answer, else fall back.
+    function answerFor(query: string): string {
+      const q = normalize(query);
+      let idx = data.questions.findIndex((item) => normalize(item) === q);
+      if (idx === -1) {
+        idx = data.questions.findIndex((item) => normalize(item).includes(q));
+      }
+      return idx === -1 ? data.fallback : data.answers[idx];
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const index = Number(chip.dataset.index);
+        chips.forEach((c) => c.setAttribute("aria-pressed", "false"));
+        chip.setAttribute("aria-pressed", "true");
+        stream(data.answers[index] ?? "");
+      });
+    });
+
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = input?.value.trim() ?? "";
+      if (!query) return;
+      chips.forEach((c) => c.setAttribute("aria-pressed", "false"));
+      stream(answerFor(query));
+      if (input) input.value = "";
+    });
+  }
+
+  initAskPanel();
+  document.addEventListener("astro:page-load", initAskPanel);
+</script>

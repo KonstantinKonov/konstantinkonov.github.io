@@ -1,0 +1,101 @@
+---
+interface Role {
+  years: string;
+  company: string;
+  role: string;
+  description: string;
+  stack: string;
+}
+
+interface Props {
+  roles: Role[];
+}
+
+const { roles } = Astro.props;
+---
+
+<section class="experience" id="experience">
+  <h2 class="section-title">Experience</h2>
+  <ul class="role-list">
+    {
+      roles.map((role) => (
+        <li class="role">
+          <div class="role-meta">{role.years}</div>
+          <div class="role-body">
+            <h3 class="role-head">
+              {role.role} · {role.company}
+            </h3>
+            <p class="role-desc">{role.description}</p>
+            <p class="role-stack">{role.stack}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .experience {
+    padding: 3rem 0;
+  }
+
+  .section-title {
+    margin: 0 0 2rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(var(--ink), 0.5);
+  }
+
+  .role-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .role {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    gap: 1.5rem;
+    padding: 1.75rem 0;
+    border-top: 1px solid rgba(var(--ink), 0.1);
+  }
+
+  .role-meta {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: rgba(var(--ink), 0.5);
+    padding-top: 0.15rem;
+  }
+
+  .role-body {
+    max-width: 42rem;
+  }
+
+  .role-head {
+    margin: 0 0 0.5rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+
+  .role-desc {
+    margin: 0 0 0.5rem;
+    color: rgba(var(--ink), 0.72);
+  }
+
+  .role-stack {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: rgba(var(--ink), 0.5);
+  }
+
+  @media (max-width: 640px) {
+    .role {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+</style>

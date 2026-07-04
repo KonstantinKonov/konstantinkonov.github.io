@@ -1,0 +1,17 @@
+---
+import { getEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Projects from "../../components/Projects.astro";
+
+const page = await getEntry("pages", "ru/projects");
+const { title, projects } = page.data;
+const { Content } = await page.render();
+---
+
+<BaseLayout title={title} lang="ru">
+  <div class="container">
+    <h1 class="page-title">{title}</h1>
+    <Content />
+    {projects && projects.length > 0 && <Projects projects={projects} />}
+  </div>
+</BaseLayout>

@@ -1,0 +1,21 @@
+---
+import { getEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Hero from "../../components/Hero.astro";
+import AskPanel from "../../components/AskPanel.astro";
+import Experience from "../../components/Experience.astro";
+
+const home = await getEntry("pages", "ru/home");
+const { title, ask, experience } = home.data;
+const { Content } = await home.render();
+---
+
+<BaseLayout title={title} lang="ru">
+  <div class="container">
+    <Hero title={title}>
+      <Content />
+    </Hero>
+    {ask && ask.length > 0 && <AskPanel items={ask} />}
+    {experience && experience.length > 0 && <Experience roles={experience} />}
+  </div>
+</BaseLayout>

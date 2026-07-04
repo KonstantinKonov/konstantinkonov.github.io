@@ -1,0 +1,17 @@
+---
+import { getEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Beliefs from "../components/Beliefs.astro";
+
+const page = await getEntry("pages", "en/beliefs");
+const { title, beliefs } = page.data;
+const { Content } = await page.render();
+---
+
+<BaseLayout title={title}>
+  <div class="container">
+    <h1 class="page-title">{title}</h1>
+    <Content />
+    {beliefs && beliefs.length > 0 && <Beliefs groups={beliefs} />}
+  </div>
+</BaseLayout>

@@ -1,0 +1,43 @@
+---
+import "../styles/global.css";
+import { ViewTransitions } from "astro:transitions";
+import Header from "../components/Header.astro";
+
+interface Props {
+  title?: string;
+  lang?: string;
+}
+
+const { title = "Portfolio", lang = "en" } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <script is:inline>
+      // Apply the saved theme before paint to avoid a flash of the wrong theme.
+      try {
+        var t = localStorage.getItem("theme");
+        if (t === "light" || t === "dark") {
+          document.documentElement.dataset.theme = t;
+        }
+      } catch (e) {}
+    </script>
+    <ViewTransitions />
+  </head>
+  <body>
+    <Header transition:persist />
+    <main class="site-main">
+      <slot />
+    </main>
+
+    <style>
+      .site-main {
+        padding-top: 4.5rem;
+      }
+    </style>
+  </body>
+</html>

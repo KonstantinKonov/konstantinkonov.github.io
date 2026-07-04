@@ -1,0 +1,17 @@
+---
+import { getEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Writing from "../components/Writing.astro";
+
+const page = await getEntry("pages", "en/writing");
+const { title, writing } = page.data;
+const { Content } = await page.render();
+---
+
+<BaseLayout title={title}>
+  <div class="container">
+    <h1 class="page-title">{title}</h1>
+    <Content />
+    {writing && writing.length > 0 && <Writing articles={writing} />}
+  </div>
+</BaseLayout>

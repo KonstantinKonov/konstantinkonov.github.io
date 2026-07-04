@@ -1,0 +1,69 @@
+---
+interface Group {
+  heading: string;
+  points: string[];
+}
+
+interface Props {
+  groups: Group[];
+}
+
+const { groups } = Astro.props;
+---
+
+<section class="beliefs">
+  {
+    groups.map((group) => (
+      <div class="belief-group">
+        <h2 class="belief-heading">{group.heading}</h2>
+        <ul class="belief-points">
+          {group.points.map((point) => (
+            <li>{point}</li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .belief-group {
+    padding: 1.75rem 0;
+    border-top: 1px solid rgba(var(--ink), 0.1);
+  }
+
+  .belief-heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(var(--ink), 0.5);
+  }
+
+  .belief-points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: 42rem;
+  }
+
+  .belief-points li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.625rem;
+    color: rgba(var(--ink), 0.85);
+  }
+
+  .belief-points li:last-child {
+    margin-bottom: 0;
+  }
+
+  .belief-points li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: rgba(var(--ink), 0.4);
+  }
+</style>
