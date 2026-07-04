@@ -3,17 +3,20 @@ title: beliefs
 beliefs:
   - heading: Engineering
     points:
-      - Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      - Sed do eiusmod tempor incididunt ut labore et dolore magna.
-      - Ut enim ad minim veniam, quis nostrud exercitation.
+      - statement: Lorem ipsum dolor sit amet
+        description: Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+      - statement: Ut enim ad minim veniam
+        description: Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
   - heading: Working with people
     points:
-      - Duis aute irure dolor in reprehenderit in voluptate.
-      - Excepteur sint occaecat cupidatat non proident.
-      - Sunt in culpa qui officia deserunt mollit anim.
+      - statement: Duis aute irure dolor
+        description: In reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+      - statement: Excepteur sint occaecat
+        description: Cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   - heading: Learning
     points:
-      - Neque porro quisquam est qui dolorem ipsum quia.
-      - Quisquam quaerat voluptatem, ut enim ad minima.
-      - Nemo enim ipsam voluptatem quia voluptas.
+      - statement: Neque porro quisquam est
+        description: Qui dolorem ipsum quia dolor sit amet, consectetur adipisci velit.
+      - statement: Quisquam quaerat voluptatem
+        description: Ut enim ad minima veniam, nemo enim ipsam voluptatem quia voluptas.
 ---

@@ -30,6 +30,4 @@ experience:
     stack: Java · Spring · PostgreSQL · Kafka
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+AI Engineer with a backend background. Areas of interest: speech processing, RAG, AI-driven support, and conversational sales systems. Experienced in identifying business needs and delivering solutions from MVP to production.

@@ -6,15 +6,36 @@ interface QA {
 
 interface Props {
   items: QA[];
+  lang?: string;
 }
 
-const { items } = Astro.props;
+const { items, lang = "en" } = Astro.props;
 
-const fallback =
-  "The assistant isn't live yet — the chat backend is still being built. For now, pick one of the suggested questions above.";
+const copy = {
+  en: {
+    sectionLabel: "Ask about me",
+    hint: "Pick a question above, or ask your own.",
+    placeholder: "Ask your own question…",
+    inputLabel: "Ask your own question",
+    sendLabel: "Send question",
+    send: "Ask",
+    fallback:
+      "The assistant isn't live yet — the chat backend is still being built. For now, pick one of the suggested questions above.",
+  },
+  ru: {
+    sectionLabel: "Спросить обо мне",
+    hint: "Выбери вопрос выше или задай свой.",
+    placeholder: "Задай свой вопрос…",
+    inputLabel: "Задать свой вопрос",
+    sendLabel: "Отправить вопрос",
+    send: "Спросить",
+    fallback:
+      "Ассистент пока не запущен — чат-бэкенд ещё в разработке. Пока что выбери один из предложенных вопросов выше.",
+  },
+}[lang === "ru" ? "ru" : "en"];
 ---
 
-<section class="ask" aria-label="Ask about me">
+<section class="ask" aria-label={copy.sectionLabel}>
   <div class="ask-card" data-ask>
     <div class="ask-chips">
       {
@@ -27,7 +48,7 @@ const fallback =
     </div>
 
     <div class="ask-answer" data-answer aria-live="polite">
-      <span class="ask-hint">Pick a question above, or ask your own.</span>
+      <span class="ask-hint">{copy.hint}</span>
     </div>
 
     <form class="ask-form" data-ask-form>
@@ -36,11 +57,11 @@ const fallback =
         type="text"
         name="q"
         autocomplete="off"
-        placeholder="Ask your own question…"
-        aria-label="Ask your own question"
+        placeholder={copy.placeholder}
+        aria-label={copy.inputLabel}
       />
-      <button class="ask-send" type="submit" aria-label="Send question">
-        Ask
+      <button class="ask-send" type="submit" aria-label={copy.sendLabel}>
+        {copy.send}
       </button>
     </form>
   </div>
@@ -51,7 +72,7 @@ const fallback =
     set:html={JSON.stringify({
       answers: items.map((i) => i.answer),
       questions: items.map((i) => i.question),
-      fallback,
+      fallback: copy.fallback,
     })}
   />
 </section>

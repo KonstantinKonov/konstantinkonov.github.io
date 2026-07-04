@@ -10,12 +10,12 @@ const { title, ask, experience } = home.data;
 const { Content } = await home.render();
 ---
 
-<BaseLayout title={title}>
+<BaseLayout>
   <div class="container">
     <Hero title={title}>
       <Content />
     </Hero>
-    {ask && ask.length > 0 && <AskPanel items={ask} />}
     {experience && experience.length > 0 && <Experience roles={experience} />}
+    {ask && ask.length > 0 && <AskPanel items={ask} />}
   </div>
 </BaseLayout>

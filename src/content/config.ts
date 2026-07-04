@@ -49,7 +49,12 @@ const pages = defineCollection({
       .array(
         z.object({
           heading: z.string(),
-          points: z.array(z.string()),
+          points: z.array(
+            z.object({
+              statement: z.string(),
+              description: z.string(),
+            }),
+          ),
         }),
       )
       .optional(),

@@ -4,11 +4,10 @@ import { ViewTransitions } from "astro:transitions";
 import Header from "../components/Header.astro";
 
 interface Props {
-  title?: string;
   lang?: string;
 }
 
-const { title = "Portfolio", lang = "en" } = Astro.props;
+const { lang = "en" } = Astro.props;
 ---
 
 <!doctype html>
@@ -16,15 +15,21 @@ const { title = "Portfolio", lang = "en" } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>konstantin.konov</title>
     <script is:inline>
-      // Apply the saved theme before paint to avoid a flash of the wrong theme.
-      try {
-        var t = localStorage.getItem("theme");
-        if (t === "light" || t === "dark") {
-          document.documentElement.dataset.theme = t;
-        }
-      } catch (e) {}
+      // Applied before paint on full loads, and again after every client-side
+      // transition (the swap resets html[data-theme] to the fetched page's
+      // markup, which never has it baked in — see astro:after-swap below).
+      function applyStoredTheme() {
+        try {
+          var t = localStorage.getItem("theme");
+          if (t === "light" || t === "dark") {
+            document.documentElement.dataset.theme = t;
+          }
+        } catch (e) {}
+      }
+      applyStoredTheme();
+      document.addEventListener("astro:after-swap", applyStoredTheme);
     </script>
     <ViewTransitions />
   </head>

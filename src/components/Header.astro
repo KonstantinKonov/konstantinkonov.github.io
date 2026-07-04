@@ -194,8 +194,13 @@ const links = [
     });
   }
 
+  const NAV_LABELS: Record<string, Record<string, string>> = {
+    en: { "/": "Home", "/projects": "projects", "/writing": "writing", "/beliefs": "beliefs" },
+    ru: { "/": "Главная", "/projects": "проекты", "/writing": "статьи", "/beliefs": "убеждения" },
+  };
+
   // The header is persisted across view transitions, so its locale-dependent
-  // links are recomputed from the current path on every navigation.
+  // links and labels are recomputed from the current path on every navigation.
   function localizeHeader() {
     const path = document.location.pathname.replace(/\/+$/, "") || "/";
     let lang = "en";
@@ -209,12 +214,14 @@ const links = [
     }
 
     const ruHref = (b: string) => (b === "/" ? "/ru/" : "/ru" + b);
+    const labels = NAV_LABELS[lang];
 
     document
       .querySelectorAll<HTMLAnchorElement>(".nav-link[data-base]")
       .forEach((a) => {
         const b = a.dataset.base || "/";
         a.setAttribute("href", lang === "ru" ? ruHref(b) : b);
+        if (labels[b]) a.textContent = labels[b];
       });
 
     const en = document.querySelector<HTMLAnchorElement>('[data-lang="en"]');

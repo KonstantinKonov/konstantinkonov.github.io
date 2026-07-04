@@ -1,7 +1,12 @@
 ---
+interface Point {
+  statement: string;
+  description: string;
+}
+
 interface Group {
   heading: string;
-  points: string[];
+  points: Point[];
 }
 
 interface Props {
@@ -18,7 +23,10 @@ const { groups } = Astro.props;
         <h2 class="belief-heading">{group.heading}</h2>
         <ul class="belief-points">
           {group.points.map((point) => (
-            <li>{point}</li>
+            <li>
+              <p class="belief-statement">{point.statement}</p>
+              <p class="belief-description">{point.description}</p>
+            </li>
           ))}
         </ul>
       </div>
@@ -33,37 +41,45 @@ const { groups } = Astro.props;
   }
 
   .belief-heading {
-    margin: 0 0 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(var(--ink), 0.5);
+    margin: 0 0 1.25rem;
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--fg);
   }
 
   .belief-points {
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     list-style: none;
-    max-width: 42rem;
+    max-width: 34rem;
   }
 
   .belief-points li {
-    position: relative;
-    padding-left: 1.25rem;
-    margin-bottom: 0.625rem;
-    color: rgba(var(--ink), 0.85);
+    padding: 0.9rem 0;
+    border-top: 1px solid rgba(var(--ink), 0.08);
+  }
+
+  .belief-points li:first-child {
+    border-top: none;
+    padding-top: 0;
   }
 
   .belief-points li:last-child {
-    margin-bottom: 0;
+    padding-bottom: 0;
   }
 
-  .belief-points li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-    color: rgba(var(--ink), 0.4);
+  .belief-statement {
+    margin: 0 0 0.3rem;
+    font-weight: 600;
+    color: rgba(var(--ink), 0.92);
+  }
+
+  .belief-description {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: rgba(var(--ink), 0.6);
   }
 </style>
